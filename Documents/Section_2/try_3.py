@@ -84,18 +84,22 @@ def extract_tables_from_pdf(pdf_path):
     return df_list
 
 
-def find_header_row(combined_df, headers):
+def assign_headers(combined_df, headers):
     """
-    Identifies the header row in the combined DataFrame.
-    Returns the index of the header row or None if not found.
+    Assign predefined headers to the DataFrame.
+    Assumes that the DataFrame has the correct number of columns.
     """
-    for i, row in combined_df.iterrows():
-        # Compare the row with the predefined headers
-        row_values = [str(item).strip() for item in row.values]
-        match_count = sum([1 for header in headers if header in row_values])
-        if match_count >= len(headers) * 0.5:  # At least 50% headers match
-            return i
-    return None
+    if combined_df.shape[1] < len(headers):
+        # Add missing columns with empty strings
+        for _ in range(len(headers) - combined_df.shape[1]):
+            combined_df[len(combined_df.columns)] = ""
+    elif combined_df.shape[1] > len(headers):
+        # Trim extra columns
+        combined_df = combined_df.iloc[:, : len(headers)]
+
+    # Assign headers to the DataFrame
+    combined_df.columns = headers
+    return combined_df
 
 
 def clean_and_structurize_data(combined_df, headers):
@@ -103,28 +107,18 @@ def clean_and_structurize_data(combined_df, headers):
     Cleans the combined DataFrame and structures it according to the predefined headers.
     Returns a cleaned DataFrame and a list of problematic rows.
     """
-    # Identify the header row
-    header_row_index = find_header_row(combined_df, headers)
-    if header_row_index is not None:
-        # Assign column headers
-        combined_df.columns = combined_df.iloc[header_row_index]
-        # Drop rows up to and including the header row
-        combined_df = combined_df.iloc[header_row_index + 1 :].reset_index(drop=True)
-        print(f"Header row found at index {header_row_index}.")
-    else:
-        print("Header row not found. Proceeding without reassigning column headers.")
+    # Assign predefined headers
+    combined_df = assign_headers(combined_df, headers)
 
-    # Keep only the predefined columns
-    combined_df = combined_df[headers]
-
-    # Drop rows with all NaN values
+    # Drop rows with all NaN or empty strings
+    combined_df.replace("", pd.NA, inplace=True)
     combined_df.dropna(how="all", inplace=True)
 
     # Function to validate if a row is a valid data entry
     def is_valid_row(row):
         # Check if the first column '№' is a valid integer
         try:
-            int(row["№"])
+            int(str(row["№"]).strip())
             return True
         except (ValueError, TypeError):
             return False
