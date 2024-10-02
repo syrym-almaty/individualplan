@@ -1,0 +1,59 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+venv/
+individualplan/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Python-specific cache and settings
+*.sqlite3
+*.db
+*.env
+.env.*
+
+# IDE and editor settings
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Coverage reports
+htmlcov/
+.coverage
+
+# Jupyter Notebook files
+.ipynb_checkpoints/
+
+# Other project files
+*.bak
+*.tmp
+
+# Virtual environment directories
+.venv/
+venv/
+
+# Byte-compiled / optimized files
+__pycache__/
+*.py[cod]
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Python egg metadata
+*.egg-info/
+.eggs/
