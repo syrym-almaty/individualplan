@@ -24,7 +24,7 @@ extract_text_from_pdf(pdf_file_path)
 json_output = json.dumps(data, ensure_ascii=False, indent=4)
 
 # Save the JSON output to a file
-output_json_path = r"C:\Users\syrym\Downloads\extracted_pdf_data.json"
+output_json_path = r"extracted_pdf_data.json"
 with open(output_json_path, 'w', encoding='utf-8') as json_file:
     json_file.write(json_output)
 
